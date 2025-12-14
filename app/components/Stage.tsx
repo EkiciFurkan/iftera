@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Home, Gift, ShoppingBag, User, Utensils } from 'lucide-react';
+import SpaceStories from './SpaceStories';
 import clsx from 'clsx';
 
 interface StageProps {
@@ -38,27 +39,31 @@ export default function Stage({ onIfGoClick }: StageProps) {
 
             {/* BODY CONTENT */}
             <motion.div
-                className="flex-1 p-6 relative overflow-y-auto"
+                className="flex-1 relative overflow-y-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
             >
-                <h2 className="text-3xl font-bold text-neutral-800">Kategoriler</h2>
-                <p className="text-neutral-500 mb-6">Canın ne istiyor?</p>
+                <SpaceStories />
 
-                {/* Info Card */}
-                <div className="bg-[#F5F5F0] border border-neutral-200 p-6 rounded-xl text-center shadow-sm">
-                    <p className="text-neutral-600 text-sm leading-relaxed">
-                        Kategorileri görmek için bulunduğunuz <br />
-                        <span className="font-bold underline decoration-red-500 decoration-2 underline-offset-2">"Sipariş Ver"</span> butonuna tıklayarak QR kodunu okutunuz.
-                    </p>
-                </div>
+                <div className="px-6 pb-6">
+                    <h2 className="text-3xl font-bold text-neutral-800">Kategoriler</h2>
+                    <p className="text-neutral-500 mb-6">Canın ne istiyor?</p>
 
-                {/* Decorative Divider */}
-                <div className="mt-12 h-4 w-full relative opacity-20">
-                    <div className="absolute inset-0 flex">
-                        {Array.from({ length: 40 }).map((_, i) => (
-                            <div key={i} className="w-2 h-full bg-neutral-400 -skew-x-45 ml-2" />
-                        ))}
+                    {/* Info Card */}
+                    <div className="bg-[#F5F5F0] border border-neutral-200 p-6 rounded-xl text-center shadow-sm">
+                        <p className="text-neutral-600 text-sm leading-relaxed">
+                            Kategorileri görmek için bulunduğunuz <br />
+                            <span className="font-bold underline decoration-red-500 decoration-2 underline-offset-2">"Sipariş Ver"</span> butonuna tıklayarak QR kodunu okutunuz.
+                        </p>
+                    </div>
+
+                    {/* Decorative Divider */}
+                    <div className="mt-12 h-4 w-full relative opacity-20">
+                        <div className="absolute inset-0 flex">
+                            {Array.from({ length: 40 }).map((_, i) => (
+                                <div key={i} className="w-2 h-full bg-neutral-400 -skew-x-45 ml-2" />
+                            ))}
+                        </div>
                     </div>
                 </div>
             </motion.div>
