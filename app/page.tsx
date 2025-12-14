@@ -11,23 +11,26 @@ export default function Home() {
   const [isStoreOpen, setIsStoreOpen] = useState(false);
 
   return (
-    <main className="relative min-h-screen w-full bg-[#FAFAFA] overflow-hidden font-sans">
-      <Stage onIfGoClick={() => setIsMenuOpen(true)} />
+      <main className="relative min-h-screen w-full bg-[#FAFAFA] overflow-hidden font-sans">
+          
+          <Stage onIfGoClick={() => setIsMenuOpen(true)}/>
 
-      <MasonryMenu
-        isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(false)}
-        onProfileClick={() => {
-          setIsMenuOpen(false);
-          setIsStoreOpen(true);
-        }}
-      />
+          <MasonryMenu
+              isOpen={isMenuOpen}
+              onClose={() => setIsMenuOpen(false)}
+              onProfileClick={() => {
+                  setIsMenuOpen(false);
+                  setIsStoreOpen(true);
+              }}
+          />
 
-      <AnimatePresence>
-        {isStoreOpen && (
-          <AvatarStore onBack={() => setIsStoreOpen(false)} />
-        )}
-      </AnimatePresence>
-    </main>
+          <AnimatePresence>
+              {isStoreOpen && (
+                  <AvatarStore onBack={() => setIsStoreOpen(false)}/>
+              )}
+          </AnimatePresence>
+
+
+      </main>
   );
 }

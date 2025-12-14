@@ -4,6 +4,7 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import IcebreakerGame from './games/IcebreakerGame';
+import WhoPaysGame from './games/WhoPaysGame';
 import GameTile from './masonry/GameTile';
 import MusicTile from './masonry/MusicTile';
 import { ScreenCastTile, CouponTile, ProfileTile, AvatarStoreTile } from './masonry/InfoTiles';
@@ -78,6 +79,9 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
                     <AnimatePresence>
                         {activeGame === 'Kartlar' && (
                             <IcebreakerGame onClose={closeGame} />
+                        )}
+                        {activeGame === 'Hesap Kimde' && (
+                            <WhoPaysGame onClose={closeGame} />
                         )}
                     </AnimatePresence>
 
