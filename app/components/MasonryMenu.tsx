@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Music, Gamepad2, Camera, Gift, User, X } from 'lucide-react';
-import clsx from 'clsx';
 
 interface MasonryMenuProps {
     isOpen: boolean;
@@ -50,7 +49,7 @@ export default function MasonryMenu({ isOpen, onClose }: MasonryMenuProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-40 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4"
+                    className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4"
                 >
                     {/* Close Button */}
                     <motion.button
@@ -79,8 +78,8 @@ export default function MasonryMenu({ isOpen, onClose }: MasonryMenuProps) {
                             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay group-hover:scale-110 transition-transform duration-500" />
                             <div className="relative z-10 flex items-center justify-between h-full">
                                 <div>
-                                    <h3 className="text-2xl font-bold text-white mb-1">Music Voting</h3>
-                                    <p className="text-blue-100 text-sm">Pick the next track 🎵</p>
+                                    <h3 className="text-2xl font-bold text-white mb-1">Müzik Oylama</h3>
+                                    <p className="text-blue-100 text-sm">Sıradaki Şarkıyı Seç 🎵</p>
                                 </div>
                                 <Music className="w-12 h-12 text-white/90" />
                             </div>
@@ -92,13 +91,13 @@ export default function MasonryMenu({ isOpen, onClose }: MasonryMenuProps) {
                             className="row-span-2 bg-gradient-to-br from-orange-500 to-red-600 rounded-3xl p-6 relative overflow-hidden group cursor-pointer flex flex-col justify-between"
                         >
                             <div className="absolute top-0 right-0 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-bl-xl">
-                                LIVE
+                                CANLI
                             </div>
                             <div className="mt-4">
                                 <Gamepad2 className="w-12 h-12 text-white mb-4" />
-                                <h3 className="text-xl font-bold text-white leading-tight">Play &<br />Win</h3>
+                                <h3 className="text-xl font-bold text-white leading-tight">Oyna &<br />Kazan</h3>
                             </div>
-                            <p className="text-orange-100 text-xs mt-2">Hit the target, win a beer! 🍺</p>
+                            <p className="text-orange-100 text-xs mt-2">Hedefi vur, birayı kap! 🍺</p>
                         </motion.div>
 
                         {/* KUTU C: Video & Stage (Square) */}
@@ -107,7 +106,7 @@ export default function MasonryMenu({ isOpen, onClose }: MasonryMenuProps) {
                             className="bg-lime-500 rounded-3xl p-4 flex flex-col items-center justify-center relative overflow-hidden group cursor-pointer"
                         >
                             <Camera className="w-10 h-10 text-black mb-2 group-hover:rotate-12 transition-transform" />
-                            <h3 className="text-black font-bold text-lg text-center leading-none">On<br />Stage</h3>
+                            <h3 className="text-black font-bold text-lg text-center leading-none">Ekrana<br />Yansıt</h3>
                         </motion.div>
 
                         {/* KUTU D: Wallet & Deals (Square) */}
@@ -117,9 +116,9 @@ export default function MasonryMenu({ isOpen, onClose }: MasonryMenuProps) {
                         >
                             <div className="absolute -top-6 -right-6 w-12 h-12 bg-red-500 rotate-45" />
                             <Gift className="w-10 h-10 text-black mb-2" />
-                            <h3 className="text-black font-bold text-lg text-center leading-none">My<br />Deals</h3>
+                            <h3 className="text-black font-bold text-lg text-center leading-none">Benim<br />Kuponum</h3>
                             <span className="absolute top-2 right-2 text-[10px] bg-white px-1.5 py-0.5 rounded text-black font-bold transform rotate-6">
-                                1 FREE
+                                1 HEDİYE
                             </span>
                         </motion.div>
 
@@ -134,7 +133,7 @@ export default function MasonryMenu({ isOpen, onClose }: MasonryMenuProps) {
                                 </div>
                                 <div>
                                     <h4 className="text-white font-bold text-sm">Pars</h4>
-                                    <span className="text-neutral-400 text-xs">Level 5 Raider</span>
+                                    <span className="text-neutral-400 text-xs">5. Seviye Müdavim</span>
                                 </div>
                             </div>
                             <div className="h-2 w-20 bg-neutral-700 rounded-full overflow-hidden">
