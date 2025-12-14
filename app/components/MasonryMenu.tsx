@@ -137,66 +137,29 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
                         exit="exit"
                         className="w-full max-w-md grid grid-cols-2 gap-4 auto-rows-[minmax(100px,auto)]"
                     >
-                        {/* KUTU A: Music Voting (Wide) */}
-                        <motion.div
-                            variants={itemVariants}
-                            className="col-span-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl relative overflow-hidden group cursor-pointer h-full"
-                        >
-                            <AnimatePresence initial={false} custom={direction} mode="wait">
-                                {!isMusicMode ? (
-                                    <motion.div
-                                        key="music-default"
-                                        custom={direction}
-                                        variants={slideVariants}
-                                        initial="initial"
-                                        animate="animate"
-                                        exit="exit"
-                                        onClick={toggleMusicMode}
-                                        className="absolute inset-0 p-6 flex items-center justify-between"
-                                    >
-                                        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay group-hover:scale-110 transition-transform duration-500" />
-                                        <div className="relative z-10 flex items-center justify-between w-full">
-                                            <div>
-                                                <h3 className="text-2xl font-bold text-white mb-1">Müzik Oylama</h3>
-                                                <p className="text-blue-100 text-sm">Sıradaki Şarkıyı Seç 🎵</p>
-                                            </div>
-                                            <Music className="w-12 h-12 text-white/90" />
+                        {/* KUTU A: Music Voting (Wide) - Grid Item or Placeholder */}
+                        <div className="col-span-2 h-full min-h-[140px]">
+                            {/* We keep the space occupied, but render the card conditionally for layoutId transition */}
+                            {!isMusicMode && (
+                                <motion.div
+                                    layoutId="music-card"
+                                    variants={itemVariants}
+                                    initial="visible"
+                                    animate="visible"
+                                    onClick={toggleMusicMode}
+                                    className="w-full h-full bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-6 relative overflow-hidden group cursor-pointer shadow-xl"
+                                >
+                                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay group-hover:scale-110 transition-transform duration-500" />
+                                    <div className="relative z-10 flex items-center justify-between h-full">
+                                        <div>
+                                            <motion.h3 layoutId="music-title" className="text-2xl font-bold text-white mb-1">Müzik Oylama</motion.h3>
+                                            <p className="text-blue-100 text-sm">Sıradaki Şarkıyı Seç 🎵</p>
                                         </div>
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key="music-voting"
-                                        custom={direction}
-                                        variants={slideVariants}
-                                        initial="initial"
-                                        animate="animate"
-                                        exit="exit"
-                                        className="absolute inset-0 p-4 flex flex-col bg-slate-900/50 backdrop-blur-xl"
-                                    >
-                                        {/* Header */}
-                                        <div className="flex items-center gap-3 mb-4 shrink-0">
-                                            <button
-                                                onClick={toggleMusicMode}
-                                                className="p-2 bg-white/10 rounded-full hover:bg-white/20 text-white transition-colors"
-                                            >
-                                                <ChevronLeft className="w-5 h-5" />
-                                            </button>
-                                            <div>
-                                                <h3 className="text-white font-bold text-lg leading-none">Müzik Oylama</h3>
-                                                <span className="text-xs text-blue-200">En çok oy alan çalar!</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Song List */}
-                                        <div className="flex-1 overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
-                                            {songs.map((song) => (
-                                                <SongItem key={song.id} {...song} />
-                                            ))}
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </motion.div>
+                                        <Music className="w-12 h-12 text-white/90" />
+                                    </div>
+                                </motion.div>
+                            )}
+                        </div>
 
                         {/* KUTU B: Game & Arcade (Tall) */}
                         {/* KUTU B: Game & Arcade (Tall) */}
@@ -354,6 +317,47 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
                             </div>
                         </motion.div>
 
+                        {/* Expanded Music Player Overlay */}
+                        {isMusicMode && (
+                            <>
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+                                    onClick={toggleMusicMode}
+                                />
+                                <motion.div
+                                    layoutId="music-card"
+                                    className="fixed top-[15%] left-[5%] right-[5%] w-[90%] md:w-[70%] md:left-[15%] h-[70vh] bg-slate-900 border border-white/10 rounded-3xl overflow-hidden z-50 flex flex-col shadow-2xl"
+                                >
+                                    {/* Expanded Header */}
+                                    <div className="p-6 pb-2 flex items-center justify-between bg-gradient-to-b from-purple-900/50 to-transparent">
+                                        <div className="flex items-center gap-4">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleMusicMode();
+                                                }}
+                                                className="p-3 bg-white/10 rounded-full hover:bg-white/20 text-white transition-colors"
+                                            >
+                                                <ChevronLeft className="w-6 h-6" />
+                                            </button>
+                                            <div>
+                                                <motion.h3 layoutId="music-title" className="text-2xl font-bold text-white leading-none">Müzik Oylama</motion.h3>
+                                                <span className="text-sm text-blue-200">Mekanın DJ'i Sensin! 🎧</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Expanded Content - Song List */}
+                                    <div className="flex-1 overflow-y-auto p-6 pt-2 space-y-3">
+                                        {songs.map((song) => (
+                                            <SongItem key={song.id} {...song} />
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            </>
+                        )}
                     </motion.div>
                 </motion.div>
             )}
@@ -374,14 +378,14 @@ const SongItem = ({ title, artist, votes }: { title: string, artist: string, vot
     const [voted, setVoted] = useState(false);
 
     return (
-        <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors group">
-            <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-300">
-                    <Music className="w-5 h-5" />
+        <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group">
+            <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-300">
+                    <Music className="w-6 h-6" />
                 </div>
                 <div>
-                    <h4 className="text-white font-bold text-sm leading-tight">{title}</h4>
-                    <p className="text-white/50 text-xs">{artist}</p>
+                    <h4 className="text-white font-bold text-lg leading-tight mb-1">{title}</h4>
+                    <p className="text-white/50 text-sm">{artist}</p>
                 </div>
             </div>
             <button
@@ -389,10 +393,10 @@ const SongItem = ({ title, artist, votes }: { title: string, artist: string, vot
                     e.stopPropagation();
                     setVoted(!voted);
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${voted ? 'bg-green-500 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${voted ? 'bg-green-500 text-white shadow-lg shadow-green-500/20' : 'bg-white/10 text-white hover:bg-white/20'}`}
             >
-                <span className="text-xs font-bold">{votes + (voted ? 1 : 0)}</span>
-                <Heart className={`w-3.5 h-3.5 ${voted ? 'fill-current' : ''}`} />
+                <span className="text-sm font-bold">{votes + (voted ? 1 : 0)}</span>
+                <Heart className={`w-5 h-5 ${voted ? 'fill-current' : ''}`} />
             </button>
         </div>
     );
