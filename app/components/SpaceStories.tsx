@@ -106,15 +106,21 @@ export default function SpaceStories() {
 
             {/* Modals */}
             <AnimatePresence>
-                <CameraModal
-                    isOpen={isCameraOpen}
-                    onClose={() => setIsCameraOpen(false)}
-                    activeTag={activeTag}
-                />
-                <GameTemplateSelector
-                    isOpen={isGameSelectorOpen}
-                    onClose={() => setIsGameSelectorOpen(false)}
-                />
+                {isCameraOpen && (
+                    <CameraModal
+                        key="camera-modal"
+                        isOpen={isCameraOpen}
+                        onClose={() => setIsCameraOpen(false)}
+                        activeTag={activeTag}
+                    />
+                )}
+                {isGameSelectorOpen && (
+                    <GameTemplateSelector
+                        key="game-selector"
+                        isOpen={isGameSelectorOpen}
+                        onClose={() => setIsGameSelectorOpen(false)}
+                    />
+                )}
             </AnimatePresence>
         </div>
     );

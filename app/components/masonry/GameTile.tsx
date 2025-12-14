@@ -32,9 +32,11 @@ interface GameTileProps {
     isExpanded: boolean;
     onToggle: () => void;
     direction: number;
+    onGameSelect?: (gameName: string) => void;
 }
 
-export default function GameTile({ isExpanded, onToggle }: GameTileProps) {
+export default function GameTile({ isExpanded, onToggle, onGameSelect }: GameTileProps) {
+    // ... (state remains same)
     const [view, setView] = useState<'cover' | 'categories' | 'games'>('cover');
     const [activeTab, setActiveTab] = useState<GameCategory>('Bireysel');
     const [slideDirection, setSlideDirection] = useState(0);
@@ -42,9 +44,7 @@ export default function GameTile({ isExpanded, onToggle }: GameTileProps) {
     // Filter games based on active tab
     const filteredGames = games.filter(g => g.category === activeTab);
 
-    // Reset state when closed logic might be handled by parent, but here we manage internal view
-    // Note: 'isExpanded' prop is less relevant now as we don't expand, but we might want to reset if parent closes menu
-
+    // ... (handlers remain same)
     const handleStart = () => {
         setSlideDirection(1);
         setView('categories');
@@ -66,14 +66,23 @@ export default function GameTile({ isExpanded, onToggle }: GameTileProps) {
         setView('cover');
     };
 
+    const handleGameClick = (gameName: string) => {
+        if (onGameSelect) {
+            onGameSelect(gameName);
+        }
+    };
+
     return (
         <motion.div
+            // ...
             layout
             className="col-span-2 row-span-2 bg-gradient-to-br from-orange-500 to-red-600 rounded-3xl relative overflow-hidden flex flex-col pt-0 pb-0 min-h-[300px]"
         >
             <AnimatePresence initial={false} custom={slideDirection} mode="wait">
+                {/* ... (Cover and Categories views remain mostly same) */}
                 {view === 'cover' ? (
                     <motion.div
+                        // ...
                         key="cover"
                         custom={slideDirection}
                         variants={slideVariants}
@@ -83,6 +92,7 @@ export default function GameTile({ isExpanded, onToggle }: GameTileProps) {
                         className="absolute inset-0 flex flex-col pt-6 px-6 cursor-pointer group"
                         onClick={handleStart}
                     >
+                        {/* ... content ... */}
                         <div className="absolute top-0 right-0 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-bl-xl z-20">
                             CANLI
                         </div>
@@ -181,7 +191,11 @@ export default function GameTile({ isExpanded, onToggle }: GameTileProps) {
                         {/* Grid */}
                         <div className="grid grid-cols-3 gap-3 overflow-y-auto pr-1 custom-scrollbar pb-2">
                             {filteredGames.map((game, index) => (
-                                <GameItem key={index} {...game} />
+                                <GameItem
+                                    key={index}
+                                    {...game}
+                                    onClick={() => handleGameClick(game.name)}
+                                />
                             ))}
                         </div>
                     </motion.div>
@@ -206,8 +220,11 @@ const SmallCategoryCard = ({ title, icon, color, onClick }: any) => (
     </motion.button>
 );
 
-const GameItem = ({ icon, name, color }: { icon: string, name: string, color: string }) => (
-    <div className="aspect-square flex flex-col items-center justify-center p-2 rounded-2xl bg-black/20 hover:bg-black/30 transition-all cursor-pointer group hover:-translate-y-1">
+const GameItem = ({ icon, name, color, onClick }: { icon: string, name: string, color: string, onClick?: () => void }) => (
+    <div
+        onClick={onClick}
+        className="aspect-square flex flex-col items-center justify-center p-2 rounded-2xl bg-black/20 hover:bg-black/30 transition-all cursor-pointer group hover:-translate-y-1"
+    >
         <div className={`w-10 h-10 rounded-full ${color} flex items-center justify-center text-xl mb-1 shadow-lg group-hover:scale-110 transition-transform`}>
             {icon}
         </div>

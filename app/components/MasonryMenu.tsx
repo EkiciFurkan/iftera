@@ -3,6 +3,7 @@
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import IcebreakerGame from './games/IcebreakerGame';
 import GameTile from './masonry/GameTile';
 import MusicTile from './masonry/MusicTile';
 import { ScreenCastTile, CouponTile, ProfileTile, AvatarStoreTile } from './masonry/InfoTiles';
@@ -35,6 +36,7 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
     const [isGameMode, setIsGameMode] = useState(false);
     const [isMusicMode, setIsMusicMode] = useState(false);
     const [direction, setDirection] = useState(0);
+    const [activeGame, setActiveGame] = useState<string | null>(null);
 
     const toggleGameMode = () => {
         setDirection(isGameMode ? -1 : 1);
@@ -45,12 +47,21 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
         setIsMusicMode(!isMusicMode);
     };
 
+    const handleGameSelect = (gameName: string) => {
+        setActiveGame(gameName);
+    };
+
+    const closeGame = () => {
+        setActiveGame(null);
+    };
+
     // Reset state when menu closes
     useEffect(() => {
         if (!isOpen) {
             setIsGameMode(false);
             setIsMusicMode(false);
             setDirection(0);
+            setActiveGame(null);
         }
     }, [isOpen]);
 
@@ -63,6 +74,13 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
                     exit={{ opacity: 0 }}
                     className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 overflow-y-auto"
                 >
+                    {/* Game Overlay */}
+                    <AnimatePresence>
+                        {activeGame === 'Kartlar' && (
+                            <IcebreakerGame onClose={closeGame} />
+                        )}
+                    </AnimatePresence>
+
                     {/* Close Button */}
                     <motion.button
                         onClick={onClose}
@@ -86,7 +104,12 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
                         <MusicTile isExpanded={isMusicMode} onToggle={toggleMusicMode} />
 
                         {/* Game Tile (Full Width, Taller) */}
-                        <GameTile isExpanded={isGameMode} onToggle={toggleGameMode} direction={direction} />
+                        <GameTile
+                            isExpanded={isGameMode}
+                            onToggle={toggleGameMode}
+                            direction={direction}
+                            onGameSelect={handleGameSelect}
+                        />
 
                         {/* Middle Row */}
                         <ScreenCastTile />
