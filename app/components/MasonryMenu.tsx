@@ -6,6 +6,7 @@ import { Music, Gamepad2, Camera, Gift, User, X } from 'lucide-react';
 interface MasonryMenuProps {
     isOpen: boolean;
     onClose: () => void;
+    onProfileClick?: () => void;
 }
 
 const containerVariants: Variants = {
@@ -41,7 +42,7 @@ const itemVariants: Variants = {
     exit: { y: 50, opacity: 0, scale: 0.8 },
 };
 
-export default function MasonryMenu({ isOpen, onClose }: MasonryMenuProps) {
+export default function MasonryMenu({ isOpen, onClose, onProfileClick }: MasonryMenuProps) {
     return (
         <AnimatePresence>
             {isOpen && (
@@ -155,22 +156,45 @@ export default function MasonryMenu({ isOpen, onClose }: MasonryMenuProps) {
                             </span>
                         </motion.div>
 
-                        {/* KUTU E: Profile (Small Horizontal) */}
+                        {/* KUTU E: Profile Stats (Square) */}
                         <motion.div
                             variants={itemVariants}
-                            className="col-span-2 bg-neutral-900 border border-neutral-700 rounded-2xl p-4 flex items-center justify-between"
+                            className="bg-neutral-900 border border-neutral-700 rounded-3xl p-4 flex flex-col justify-between group cursor-pointer hover:border-neutral-500 transition-colors"
                         >
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center border-2 border-white">
-                                    <User className="w-6 h-6 text-white" />
+                            <div className="flex items-start justify-between">
+                                <div className="p-2 bg-indigo-500/20 rounded-xl">
+                                    <User className="w-6 h-6 text-indigo-400" />
                                 </div>
-                                <div>
-                                    <h4 className="text-white font-bold text-sm">Pars</h4>
-                                    <span className="text-neutral-400 text-xs">5. Seviye Müdavim</span>
+                                <div className="text-right">
+                                    <h4 className="text-white font-bold text-lg">Pars</h4>
+                                    <span className="text-neutral-400 text-xs">Müdavim</span>
                                 </div>
                             </div>
-                            <div className="h-2 w-20 bg-neutral-700 rounded-full overflow-hidden">
-                                <div className="h-full w-2/3 bg-indigo-500" />
+                            <div>
+                                <span className="text-2xl font-black text-white block">2,450</span>
+                                <span className="text-[10px] uppercase tracking-wider text-indigo-400 font-bold">Puan Kazanıldı</span>
+                            </div>
+                        </motion.div>
+
+                        {/* KUTU F: Avatar & Store (Square) */}
+                        <motion.div
+                            variants={itemVariants}
+                            onClick={onProfileClick}
+                            className="bg-gradient-to-b from-[#1a1a1a] to-[#2d2d2d] border border-white/10 rounded-3xl p-0 relative overflow-hidden group cursor-pointer"
+                        >
+                            {/* Avatar Visual */}
+                            <div className="absolute inset-x-0 bottom-0 h-3/4 flex justify-center items-end group-hover:scale-110 transition-transform duration-300">
+                                <svg viewBox="0 0 200 200" className="w-32 h-32 drop-shadow-2xl">
+                                    <circle cx="100" cy="90" r="50" fill="#f3d0b2" />
+                                    <rect x="60" y="140" width="80" height="60" rx="20" fill="#333" />
+                                </svg>
+                            </div>
+
+                            {/* Text / CTA */}
+                            <div className="absolute top-4 left-4 z-10">
+                                <span className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white border border-white/20">
+                                    Mağaza
+                                </span>
                             </div>
                         </motion.div>
 
