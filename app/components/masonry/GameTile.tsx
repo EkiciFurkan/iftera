@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { Gamepad2, ChevronLeft, Users, User, Globe } from 'lucide-react';
+import { Gamepad2, ChevronLeft, Users, User, QrCode } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { games, GameCategory } from './data';
 
@@ -150,10 +150,10 @@ export default function GameTile({ isExpanded, onToggle }: GameTileProps) {
                                 onClick={() => handleCategorySelect('Ekip')}
                             />
                             <SmallCategoryCard
-                                title="Online"
-                                icon={<Globe className="w-6 h-6" />}
+                                title="IF Sokak Özel"
+                                icon={<QrCode className="w-6 h-6" />}
                                 color="from-orange-500 to-red-600"
-                                onClick={() => handleCategorySelect('Online')}
+                                onClick={() => handleCategorySelect('IF Sokak Özel')}
                             />
                         </div>
                     </motion.div>

@@ -1,5 +1,5 @@
 
-export type GameCategory = 'Bireysel' | 'Ekip' | 'Online';
+export type GameCategory = 'Bireysel' | 'Ekip' | 'IF Sokak Özel';
 
 export interface Game {
     name: string;
@@ -22,10 +22,10 @@ export const games: Game[] = [
     { name: 'Tabu', icon: '🗣️', color: 'bg-purple-500', category: 'Ekip' },
     { name: 'Quiz', icon: '❓', color: 'bg-indigo-500', category: 'Ekip' },
 
-    // Online
-    { name: 'Satranç', icon: '♟️', color: 'bg-neutral-600', category: 'Online' },
-    { name: 'Dama', icon: '⚪', color: 'bg-stone-500', category: 'Online' },
-    { name: 'Okey', icon: '🀄', color: 'bg-amber-600', category: 'Online' },
+    // IF Sokak Özel
+    { name: 'Satranç', icon: '♟️', color: 'bg-neutral-600', category: 'IF Sokak Özel' },
+    { name: 'Dama', icon: '⚪', color: 'bg-stone-500', category: 'IF Sokak Özel' },
+    { name: 'Okey', icon: '🀄', color: 'bg-amber-600', category: 'IF Sokak Özel' },
 ];
 
 export const songs = [

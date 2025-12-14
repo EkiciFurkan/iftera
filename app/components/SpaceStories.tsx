@@ -3,6 +3,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import StoryViewer, { Story } from './StoryViewer';
+import CameraModal from './stories/CameraModal';
+import GameTemplateSelector from './stories/GameTemplateSelector';
 
 interface HashtagChannel {
     id: string;
@@ -13,6 +15,9 @@ interface HashtagChannel {
 
 export default function SpaceStories() {
     const [selectedChannel, setSelectedChannel] = useState<HashtagChannel | null>(null);
+    const [isCameraOpen, setIsCameraOpen] = useState(false);
+    const [isGameSelectorOpen, setIsGameSelectorOpen] = useState(false);
+    const [activeTag, setActiveTag] = useState<string>('');
 
     // Mock Data for Hashtag Channels
     const channels: HashtagChannel[] = [
@@ -20,98 +25,51 @@ export default function SpaceStories() {
             id: 'tag-1',
             tag: '#yemek',
             gradient: 'from-orange-400 to-red-600',
-            stories: [
-                {
-                    id: 101,
-                    user: "Anonim",
-                    avatar: "", // Anonymous
-                    media: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop",
-                    type: 'image',
-                    timestamp: "2d",
-                    duration: 5
-                },
-                {
-                    id: 102,
-                    user: "Anonim",
-                    avatar: "",
-                    media: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1000&auto=format&fit=crop",
-                    type: 'image',
-                    timestamp: "4h",
-                    duration: 5
-                }
-            ]
+            stories: []
         },
         {
             id: 'tag-2',
             tag: '#kafamagöre',
             gradient: 'from-purple-500 to-indigo-600',
-            stories: [
-                {
-                    id: 201,
-                    user: "Anonim",
-                    avatar: "",
-                    media: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop",
-                    type: 'image',
-                    timestamp: "10m",
-                    duration: 5
-                }
-            ]
+            stories: []
         },
         {
             id: 'tag-3',
             tag: '#sokak',
             gradient: 'from-emerald-400 to-teal-600',
-            stories: [
-                {
-                    id: 301,
-                    user: "Anonim",
-                    avatar: "",
-                    media: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1000&auto=format&fit=crop",
-                    type: 'image',
-                    timestamp: "1h",
-                    duration: 5
-                }
-            ]
+            stories: []
         },
         {
             id: 'tag-4',
             tag: '#gece',
             gradient: 'from-blue-600 to-violet-600',
-            stories: [
-                {
-                    id: 401,
-                    user: "Anonim",
-                    avatar: "",
-                    media: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=1000&auto=format&fit=crop",
-                    type: 'image',
-                    timestamp: "30m",
-                    duration: 5
-                }
-            ]
+            stories: []
         },
         {
             id: 'tag-5',
             tag: '#etkinlik',
             gradient: 'from-pink-500 to-rose-500',
-            stories: [
-                {
-                    id: 501,
-                    user: "Anonim",
-                    avatar: "",
-                    media: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop",
-                    type: 'image',
-                    timestamp: "15m",
-                    duration: 5
-                }
-            ]
+            stories: []
         }
     ];
+
+    const handleTagClick = (tag: string) => {
+        setActiveTag(tag);
+        setIsCameraOpen(true);
+    };
+
+    const handleIfleClick = () => {
+        setIsGameSelectorOpen(true);
+    };
 
     return (
         <div className="pt-6 pb-2 pl-4">
             <div className="flex items-center gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
-                {/* ifle! Button (My Story) */}
-                <div className="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer group">
+                {/* ifle! Button (My Story / Game Selector) */}
+                <div
+                    className="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer group"
+                    onClick={handleIfleClick}
+                >
                     <div className="relative w-[72px] h-[72px] flex items-center justify-center">
                         <div className="w-full h-full rounded-full bg-neutral-200/80 border-2 border-neutral-300 border-dashed group-hover:border-solid group-hover:border-[#D32F2F] transition-all flex items-center justify-center overflow-hidden">
                             <span className="text-neutral-500 font-black text-xl tracking-tighter -rotate-12 select-none group-hover:text-[#D32F2F] transition-colors">ifle!</span>
@@ -129,7 +87,7 @@ export default function SpaceStories() {
                         key={channel.id}
                         whileTap={{ scale: 0.95 }}
                         className="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer"
-                        onClick={() => setSelectedChannel(channel)}
+                        onClick={() => handleTagClick(channel.tag)}
                     >
                         <div className={`w-[72px] h-[72px] rounded-full p-[3px] bg-gradient-to-tr ${channel.gradient} flex items-center justify-center border-2 border-transparent relative overflow-hidden shadow-sm`}>
                             {/* Inner Gradient Overlay for Depth */}
@@ -146,15 +104,17 @@ export default function SpaceStories() {
                 ))}
             </div>
 
+            {/* Modals */}
             <AnimatePresence>
-                {selectedChannel && (
-                    <StoryViewer
-                        stories={selectedChannel.stories}
-                        initialIndex={0}
-                        onClose={() => setSelectedChannel(null)}
-                        channelTitle={selectedChannel.tag} // Passing the tag name to be displayed
-                    />
-                )}
+                <CameraModal
+                    isOpen={isCameraOpen}
+                    onClose={() => setIsCameraOpen(false)}
+                    activeTag={activeTag}
+                />
+                <GameTemplateSelector
+                    isOpen={isGameSelectorOpen}
+                    onClose={() => setIsGameSelectorOpen(false)}
+                />
             </AnimatePresence>
         </div>
     );
