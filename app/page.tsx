@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Stage from './components/Stage';
-// import IfGoButton from './components/IfGoButton';
 import MasonryMenu from './components/MasonryMenu';
 import AvatarStore from './components/AvatarStore';
 import { AnimatePresence } from 'framer-motion';

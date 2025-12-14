@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { Music, Gamepad2, Camera, Gift, User, X, ChevronLeft } from 'lucide-react';
+import { Music, Gamepad2, Camera, Gift, User, X, ChevronLeft, Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface MasonryMenuProps {
@@ -68,6 +68,7 @@ const slideVariants: Variants = {
 
 export default function MasonryMenu({ isOpen, onClose, onProfileClick }: MasonryMenuProps) {
     const [isGameMode, setIsGameMode] = useState(false);
+    const [isMusicMode, setIsMusicMode] = useState(false);
     const [direction, setDirection] = useState(0);
 
     const toggleGameMode = () => {
@@ -75,10 +76,16 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
         setIsGameMode(!isGameMode);
     };
 
+    const toggleMusicMode = () => {
+        setDirection(isMusicMode ? -1 : 1);
+        setIsMusicMode(!isMusicMode);
+    };
+
     // Reset state when menu closes
     useEffect(() => {
         if (!isOpen) {
             setIsGameMode(false);
+            setIsMusicMode(false);
             setDirection(0);
         }
     }, [isOpen]);
@@ -93,6 +100,14 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
         { name: 'Dama', icon: '⚪', color: 'bg-purple-500' },
         { name: 'Sudoku', icon: '📝', color: 'bg-blue-500' },
         { name: 'Pinball', icon: '🎱', color: 'bg-pink-500' },
+    ];
+
+    const songs = [
+        { id: 1, title: 'Blinding Lights', artist: 'The Weeknd', votes: 24 },
+        { id: 2, title: 'Levitating', artist: 'Dua Lipa', votes: 18 },
+        { id: 3, title: 'Save Your Tears', artist: 'The Weeknd', votes: 15 },
+        { id: 4, title: 'As It Was', artist: 'Harry Styles', votes: 12 },
+        { id: 5, title: 'Flowers', artist: 'Miley Cyrus', votes: 9 },
     ];
     return (
         <AnimatePresence>
@@ -125,16 +140,62 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
                         {/* KUTU A: Music Voting (Wide) */}
                         <motion.div
                             variants={itemVariants}
-                            className="col-span-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-6 relative overflow-hidden group cursor-pointer"
+                            className="col-span-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl relative overflow-hidden group cursor-pointer h-full"
                         >
-                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay group-hover:scale-110 transition-transform duration-500" />
-                            <div className="relative z-10 flex items-center justify-between h-full">
-                                <div>
-                                    <h3 className="text-2xl font-bold text-white mb-1">Müzik Oylama</h3>
-                                    <p className="text-blue-100 text-sm">Sıradaki Şarkıyı Seç 🎵</p>
-                                </div>
-                                <Music className="w-12 h-12 text-white/90" />
-                            </div>
+                            <AnimatePresence initial={false} custom={direction} mode="wait">
+                                {!isMusicMode ? (
+                                    <motion.div
+                                        key="music-default"
+                                        custom={direction}
+                                        variants={slideVariants}
+                                        initial="initial"
+                                        animate="animate"
+                                        exit="exit"
+                                        onClick={toggleMusicMode}
+                                        className="absolute inset-0 p-6 flex items-center justify-between"
+                                    >
+                                        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay group-hover:scale-110 transition-transform duration-500" />
+                                        <div className="relative z-10 flex items-center justify-between w-full">
+                                            <div>
+                                                <h3 className="text-2xl font-bold text-white mb-1">Müzik Oylama</h3>
+                                                <p className="text-blue-100 text-sm">Sıradaki Şarkıyı Seç 🎵</p>
+                                            </div>
+                                            <Music className="w-12 h-12 text-white/90" />
+                                        </div>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="music-voting"
+                                        custom={direction}
+                                        variants={slideVariants}
+                                        initial="initial"
+                                        animate="animate"
+                                        exit="exit"
+                                        className="absolute inset-0 p-4 flex flex-col bg-slate-900/50 backdrop-blur-xl"
+                                    >
+                                        {/* Header */}
+                                        <div className="flex items-center gap-3 mb-4 shrink-0">
+                                            <button
+                                                onClick={toggleMusicMode}
+                                                className="p-2 bg-white/10 rounded-full hover:bg-white/20 text-white transition-colors"
+                                            >
+                                                <ChevronLeft className="w-5 h-5" />
+                                            </button>
+                                            <div>
+                                                <h3 className="text-white font-bold text-lg leading-none">Müzik Oylama</h3>
+                                                <span className="text-xs text-blue-200">En çok oy alan çalar!</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Song List */}
+                                        <div className="flex-1 overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+                                            {songs.map((song) => (
+                                                <SongItem key={song.id} {...song} />
+                                            ))}
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.div>
 
                         {/* KUTU B: Game & Arcade (Tall) */}
@@ -308,6 +369,34 @@ const GameItem = ({ icon, name, color }: { icon: string, name: string, color: st
         <span className="text-[10px] text-white font-medium text-center leading-tight">{name}</span>
     </div>
 );
+
+const SongItem = ({ title, artist, votes }: { title: string, artist: string, votes: number }) => {
+    const [voted, setVoted] = useState(false);
+
+    return (
+        <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors group">
+            <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-300">
+                    <Music className="w-5 h-5" />
+                </div>
+                <div>
+                    <h4 className="text-white font-bold text-sm leading-tight">{title}</h4>
+                    <p className="text-white/50 text-xs">{artist}</p>
+                </div>
+            </div>
+            <button
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setVoted(!voted);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${voted ? 'bg-green-500 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
+            >
+                <span className="text-xs font-bold">{votes + (voted ? 1 : 0)}</span>
+                <Heart className={`w-3.5 h-3.5 ${voted ? 'fill-current' : ''}`} />
+            </button>
+        </div>
+    );
+};
 
 function GameIcon({ color, icon }: { color: string, icon: string }) {
     return (
