@@ -1,7 +1,8 @@
 'use client';
 
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { Music, Gamepad2, Camera, Gift, User, X } from 'lucide-react';
+import { Music, Gamepad2, Camera, Gift, User, X, ChevronLeft } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface MasonryMenuProps {
     isOpen: boolean;
@@ -42,7 +43,57 @@ const itemVariants: Variants = {
     exit: { y: 50, opacity: 0, scale: 0.8 },
 };
 
+const slideVariants: Variants = {
+    initial: (direction: number) => ({
+        x: direction > 0 ? '100%' : '-100%',
+        opacity: 0,
+    }),
+    animate: {
+        x: 0,
+        opacity: 1,
+        transition: {
+            x: { type: 'spring', stiffness: 300, damping: 30 },
+            opacity: { duration: 0.2 },
+        },
+    },
+    exit: (direction: number) => ({
+        x: direction < 0 ? '100%' : '-100%',
+        opacity: 0,
+        transition: {
+            x: { type: 'spring', stiffness: 300, damping: 30 },
+            opacity: { duration: 0.2 },
+        },
+    }),
+};
+
 export default function MasonryMenu({ isOpen, onClose, onProfileClick }: MasonryMenuProps) {
+    const [isGameMode, setIsGameMode] = useState(false);
+    const [direction, setDirection] = useState(0);
+
+    const toggleGameMode = () => {
+        setDirection(isGameMode ? -1 : 1);
+        setIsGameMode(!isGameMode);
+    };
+
+    // Reset state when menu closes
+    useEffect(() => {
+        if (!isOpen) {
+            setIsGameMode(false);
+            setDirection(0);
+        }
+    }, [isOpen]);
+
+    const games = [
+        { name: 'Tetris', icon: '🧱', color: 'bg-cyan-500' },
+        { name: 'Yılan', icon: '🐍', color: 'bg-green-500' },
+        { name: 'Pacman', icon: '👻', color: 'bg-yellow-400' },
+        { name: 'Kartlar', icon: '🃏', color: 'bg-red-500' },
+        { name: '2048', icon: '🔢', color: 'bg-orange-500' },
+        { name: 'Satranç', icon: '♟️', color: 'bg-neutral-600' },
+        { name: 'Dama', icon: '⚪', color: 'bg-purple-500' },
+        { name: 'Sudoku', icon: '📝', color: 'bg-blue-500' },
+        { name: 'Pinball', icon: '🎱', color: 'bg-pink-500' },
+    ];
     return (
         <AnimatePresence>
             {isOpen && (
@@ -87,57 +138,101 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
                         </motion.div>
 
                         {/* KUTU B: Game & Arcade (Tall) */}
+                        {/* KUTU B: Game & Arcade (Tall) */}
                         <motion.div
                             variants={itemVariants}
-                            className="row-span-2 bg-gradient-to-br from-orange-500 to-red-600 rounded-3xl relative overflow-hidden group cursor-pointer flex flex-col pt-6 px-6 pb-0"
+                            className="row-span-2 bg-gradient-to-br from-orange-500 to-red-600 rounded-3xl relative overflow-hidden flex flex-col pt-0 pb-0"
                         >
-                            <div className="absolute top-0 right-0 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-bl-xl z-20">
-                                CANLI
-                            </div>
+                            <AnimatePresence initial={false} custom={direction} mode="wait">
+                                {!isGameMode ? (
+                                    <motion.div
+                                        key="default"
+                                        custom={direction}
+                                        variants={slideVariants}
+                                        initial="initial"
+                                        animate="animate"
+                                        exit="exit"
+                                        className="absolute inset-0 flex flex-col pt-6 px-6 cursor-pointer group"
+                                        onClick={toggleGameMode}
+                                    >
+                                        <div className="absolute top-0 right-0 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-bl-xl z-20">
+                                            CANLI
+                                        </div>
 
-                            <div className="flex flex-col h-full relative z-10">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <Gamepad2 className="w-8 h-8 text-white" />
-                                </div>
-                                <h3 className="text-xl font-bold text-white leading-tight mb-2">Oyna &<br />Kazan</h3>
-                                <p className="text-orange-100 text-xs font-medium mb-4">Hedefi vur, birayı kap! 🍺</p>
+                                        <div className="flex flex-col h-full relative z-10">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <Gamepad2 className="w-8 h-8 text-white" />
+                                            </div>
+                                            <h3 className="text-xl font-bold text-white leading-tight mb-2">Oyna &<br />Kazan</h3>
+                                            <p className="text-orange-100 text-xs font-medium mb-4">Hedefi vur, birayı kap! 🍺</p>
 
-                                {/* Spacer to push marquee to bottom */}
-                                <div className="flex-1" />
+                                            {/* Spacer to push marquee to bottom */}
+                                            <div className="flex-1" />
 
-                                {/* Auto-Scrolling Marquee at Bottom */}
-                                <div className="relative w-[calc(100%+3rem)] -mx-6 h-16 overflow-hidden mt-2 bg-black/20 backdrop-blur-sm border-t border-white/10">
-                                    <div className="absolute inset-0 flex items-center">
-                                        <motion.div
-                                            className="flex gap-3 pr-3"
-                                            animate={{ x: "-50%" }}
-                                            transition={{
-                                                repeat: Infinity,
-                                                ease: "linear",
-                                                duration: 10
-                                            }}
-                                        >
-                                            {[...Array(2)].map((_, setIndex) => (
-                                                <div key={setIndex} className="flex gap-3">
-                                                    <GameIcon color="bg-green-500" icon="🎮" />
-                                                    <GameIcon color="bg-blue-500" icon="👾" />
-                                                    <GameIcon color="bg-red-500" icon="🎯" />
-                                                    <GameIcon color="bg-yellow-400" icon="🎲" />
-                                                    <GameIcon color="bg-purple-500" icon="🕹️" />
-                                                    <GameIcon color="bg-pink-500" icon="🎰" />
-                                                    <GameIcon color="bg-cyan-500" icon="🎳" />
+                                            {/* Auto-Scrolling Marquee at Bottom */}
+                                            <div className="relative w-[calc(100%+3rem)] -mx-6 h-16 overflow-hidden mt-2 bg-black/20 backdrop-blur-sm border-t border-white/10">
+                                                <div className="absolute inset-0 flex items-center">
+                                                    <motion.div
+                                                        className="flex gap-3 pr-3"
+                                                        animate={{ x: "-50%" }}
+                                                        transition={{
+                                                            repeat: Infinity,
+                                                            ease: "linear",
+                                                            duration: 10
+                                                        }}
+                                                    >
+                                                        {[...Array(2)].map((_, setIndex) => (
+                                                            <div key={setIndex} className="flex gap-3">
+                                                                <GameIcon color="bg-green-500" icon="🎮" />
+                                                                <GameIcon color="bg-blue-500" icon="👾" />
+                                                                <GameIcon color="bg-red-500" icon="🎯" />
+                                                                <GameIcon color="bg-yellow-400" icon="🎲" />
+                                                                <GameIcon color="bg-purple-500" icon="🕹️" />
+                                                                <GameIcon color="bg-pink-500" icon="🎰" />
+                                                                <GameIcon color="bg-cyan-500" icon="🎳" />
+                                                            </div>
+                                                        ))}
+                                                    </motion.div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="games"
+                                        custom={direction}
+                                        variants={slideVariants}
+                                        initial="initial"
+                                        animate="animate"
+                                        exit="exit"
+                                        className="absolute inset-0 p-4 flex flex-col"
+                                    >
+                                        {/* Header */}
+                                        <div className="flex items-center gap-2 mb-4">
+                                            <button
+                                                onClick={toggleGameMode}
+                                                className="p-1.5 bg-black/20 rounded-full hover:bg-black/30 text-white transition-colors"
+                                            >
+                                                <ChevronLeft className="w-5 h-5" />
+                                            </button>
+                                            <span className="text-white font-bold text-lg">Oyunlar</span>
+                                        </div>
+
+                                        {/* 3x3 Grid */}
+                                        <div className="flex-1 grid grid-cols-3 grid-rows-3 gap-2">
+                                            {games.map((game, index) => (
+                                                <GameItem key={index} {...game} />
                                             ))}
-                                        </motion.div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.div>
 
                         {/* KUTU C: Video & Stage (Square) */}
                         <motion.div
                             variants={itemVariants}
-                            className="bg-lime-500 rounded-3xl p-4 flex flex-col items-center justify-center relative overflow-hidden group cursor-pointer"
+                            className="bg-green-500 rounded-3xl p-4 flex flex-col items-center justify-center relative overflow-hidden group cursor-pointer"
                         >
                             <Camera className="w-10 h-10 text-black mb-2 group-hover:rotate-12 transition-transform" />
                             <h3 className="text-black font-bold text-lg text-center leading-none">Ekrana<br />Yansıt</h3>
@@ -204,6 +299,15 @@ export default function MasonryMenu({ isOpen, onClose, onProfileClick }: Masonry
         </AnimatePresence>
     );
 }
+
+const GameItem = ({ icon, name, color }: { icon: string, name: string, color: string }) => (
+    <div className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+        <div className={`w-10 h-10 rounded-full ${color} flex items-center justify-center text-xl mb-1 shadow-lg group-hover:scale-110 transition-transform`}>
+            {icon}
+        </div>
+        <span className="text-[10px] text-white font-medium text-center leading-tight">{name}</span>
+    </div>
+);
 
 function GameIcon({ color, icon }: { color: string, icon: string }) {
     return (
