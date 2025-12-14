@@ -90,7 +90,7 @@ export function AvatarStoreTile({ onClick }: AvatarStoreTileProps) {
             {/* Text / CTA */}
             <div className="absolute top-4 left-4 z-10">
                 <span className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white border border-white/20">
-                    Mağaza
+                    Avatarım
                 </span>
             </div>
         </motion.div>

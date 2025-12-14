@@ -1,110 +1,158 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import StoryViewer, { Story } from './StoryViewer';
 
-export default function SpaceStories() {
-    const [selectedStoryIndex, setSelectedStoryIndex] = useState<number | null>(null);
+interface HashtagChannel {
+    id: string;
+    tag: string;
+    gradient: string;
+    stories: Story[];
+}
 
-    // Mock Data
-    const stories: Story[] = [
+export default function SpaceStories() {
+    const [selectedChannel, setSelectedChannel] = useState<HashtagChannel | null>(null);
+
+    // Mock Data for Hashtag Channels
+    const channels: HashtagChannel[] = [
         {
-            id: 1,
-            user: "Selin Y.",
-            avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop",
-            media: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1920&auto=format&fit=crop",
-            type: 'image',
-            timestamp: "2d",
-            duration: 5
+            id: 'tag-1',
+            tag: '#yemek',
+            gradient: 'from-orange-400 to-red-600',
+            stories: [
+                {
+                    id: 101,
+                    user: "Anonim",
+                    avatar: "", // Anonymous
+                    media: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop",
+                    type: 'image',
+                    timestamp: "2d",
+                    duration: 5
+                },
+                {
+                    id: 102,
+                    user: "Anonim",
+                    avatar: "",
+                    media: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1000&auto=format&fit=crop",
+                    type: 'image',
+                    timestamp: "4h",
+                    duration: 5
+                }
+            ]
         },
         {
-            id: 2,
-            user: "Mert K.",
-            avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=200&auto=format&fit=crop",
-            media: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1920&auto=format&fit=crop",
-            type: 'image',
-            timestamp: "15m",
-            duration: 5
+            id: 'tag-2',
+            tag: '#kafamagöre',
+            gradient: 'from-purple-500 to-indigo-600',
+            stories: [
+                {
+                    id: 201,
+                    user: "Anonim",
+                    avatar: "",
+                    media: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop",
+                    type: 'image',
+                    timestamp: "10m",
+                    duration: 5
+                }
+            ]
         },
         {
-            id: 3,
-            user: "IF Beşiktaş",
-            avatar: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=200&auto=format&fit=crop",
-            media: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1920&auto=format&fit=crop",
-            type: 'image',
-            timestamp: "1h",
-            duration: 4
+            id: 'tag-3',
+            tag: '#sokak',
+            gradient: 'from-emerald-400 to-teal-600',
+            stories: [
+                {
+                    id: 301,
+                    user: "Anonim",
+                    avatar: "",
+                    media: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1000&auto=format&fit=crop",
+                    type: 'image',
+                    timestamp: "1h",
+                    duration: 5
+                }
+            ]
         },
         {
-            id: 4,
-            user: "Cem A.",
-            avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
-            media: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1920&auto=format&fit=crop",
-            type: 'image',
-            timestamp: "45m",
-            duration: 5
+            id: 'tag-4',
+            tag: '#gece',
+            gradient: 'from-blue-600 to-violet-600',
+            stories: [
+                {
+                    id: 401,
+                    user: "Anonim",
+                    avatar: "",
+                    media: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=1000&auto=format&fit=crop",
+                    type: 'image',
+                    timestamp: "30m",
+                    duration: 5
+                }
+            ]
         },
         {
-            id: 5,
-            user: "Ayşe T.",
-            avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=200&auto=format&fit=crop",
-            media: "https://images.unsplash.com/photo-1514525253440-b393452e2329?q=80&w=1920&auto=format&fit=crop",
-            type: 'image',
-            timestamp: "3h",
-            duration: 6
-        },
+            id: 'tag-5',
+            tag: '#etkinlik',
+            gradient: 'from-pink-500 to-rose-500',
+            stories: [
+                {
+                    id: 501,
+                    user: "Anonim",
+                    avatar: "",
+                    media: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop",
+                    type: 'image',
+                    timestamp: "15m",
+                    duration: 5
+                }
+            ]
+        }
     ];
 
     return (
         <div className="pt-6 pb-2 pl-4">
             <div className="flex items-center gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
-                {/* My Story Button */}
+                {/* ifle! Button (My Story) */}
                 <div className="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer group">
-                    <div className="relative w-[72px] h-[72px]">
-                        <div className="absolute inset-0 rounded-full p-[2px] border-2 border-neutral-300 border-dashed group-hover:border-solid group-hover:border-[#D32F2F] transition-all">
-                            <img
-                                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop"
-                                alt="My Story"
-                                className="w-full h-full rounded-full object-cover border-2 border-[#F9F9F9]"
-                            />
+                    <div className="relative w-[72px] h-[72px] flex items-center justify-center">
+                        <div className="w-full h-full rounded-full bg-neutral-200/80 border-2 border-neutral-300 border-dashed group-hover:border-solid group-hover:border-[#D32F2F] transition-all flex items-center justify-center overflow-hidden">
+                            <span className="text-neutral-500 font-black text-xl tracking-tighter -rotate-12 select-none group-hover:text-[#D32F2F] transition-colors">ifle!</span>
                         </div>
-                        <div className="absolute bottom-0 right-0 w-6 h-6 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center">
-                            <Plus className="w-4 h-4 text-white" />
+                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-[#E50914] px-2 py-0.5 rounded-md border-2 border-white shadow-sm flex items-center justify-center z-10 min-w-[34px]">
+                            <span className="text-[10px] font-black text-white leading-none tracking-tighter">EKLE</span>
                         </div>
                     </div>
-                    <span className="text-[11px] font-medium text-neutral-600">Hikayen</span>
+                    <span className="text-[11px] font-medium text-neutral-600">Hikaye At</span>
                 </div>
 
-                {/* Other Stories */}
-                {stories.map((story, index) => (
+                {/* Hashtag Channels */}
+                {channels.map((channel) => (
                     <motion.div
-                        key={story.id}
+                        key={channel.id}
                         whileTap={{ scale: 0.95 }}
                         className="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer"
-                        onClick={() => setSelectedStoryIndex(index)}
+                        onClick={() => setSelectedChannel(channel)}
                     >
-                        <div className="w-[72px] h-[72px] rounded-full p-[3px] bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
-                            <img
-                                src={story.avatar}
-                                alt={story.user}
-                                className="w-full h-full rounded-full object-cover border-2 border-[#F9F9F9]"
-                            />
+                        <div className={`w-[72px] h-[72px] rounded-full p-[3px] bg-gradient-to-tr ${channel.gradient} flex items-center justify-center border-2 border-transparent relative overflow-hidden shadow-sm`}>
+                            {/* Inner Gradient Overlay for Depth */}
+                            <div className="absolute inset-0 bg-white/10 opacity-50" />
+
+                            <span className="text-white text-[11px] font-bold z-10 text-center px-1 break-words leading-tight">
+                                {channel.tag}
+                            </span>
                         </div>
                         <span className="text-[11px] font-medium text-neutral-800 truncate max-w-[72px] text-center">
-                            {story.user}
+                            {channel.tag}
                         </span>
                     </motion.div>
                 ))}
             </div>
 
             <AnimatePresence>
-                {selectedStoryIndex !== null && (
+                {selectedChannel && (
                     <StoryViewer
-                        stories={stories}
-                        initialIndex={selectedStoryIndex}
-                        onClose={() => setSelectedStoryIndex(null)}
+                        stories={selectedChannel.stories}
+                        initialIndex={0}
+                        onClose={() => setSelectedChannel(null)}
+                        channelTitle={selectedChannel.tag} // Passing the tag name to be displayed
                     />
                 )}
             </AnimatePresence>

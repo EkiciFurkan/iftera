@@ -1,7 +1,8 @@
 'use client';
 
+// ... imports
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Heart, Send, MoreHorizontal } from 'lucide-react';
+import { X, Heart, Send, MoreHorizontal, Hash } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export interface Story {
@@ -18,13 +19,16 @@ interface StoryViewerProps {
     stories: Story[];
     initialIndex: number;
     onClose: () => void;
+    channelTitle?: string; // Optional channel title (e.g., #yemek)
 }
 
-export default function StoryViewer({ stories, initialIndex, onClose }: StoryViewerProps) {
+export default function StoryViewer({ stories, initialIndex, onClose, channelTitle }: StoryViewerProps) {
     const [currentIndex, setCurrentIndex] = useState(initialIndex);
     const [progress, setProgress] = useState(0);
 
     const currentStory = stories[currentIndex];
+
+    // ... (useEffect for timer remains same, but omitted for brevity in replace block if possible, but I must provide contiguous block. I will copy mostly everything to be safe)
 
     useEffect(() => {
         // Reset progress when slide changes
@@ -52,6 +56,7 @@ export default function StoryViewer({ stories, initialIndex, onClose }: StoryVie
         return () => clearInterval(timer);
     }, [currentIndex, stories.length, onClose, currentStory.duration]);
 
+    // ... handleNext/Prev ...
     const handleNext = (e: React.MouseEvent) => {
         e.stopPropagation();
         if (currentIndex < stories.length - 1) {
@@ -67,6 +72,7 @@ export default function StoryViewer({ stories, initialIndex, onClose }: StoryVie
             setCurrentIndex(currentIndex - 1);
         }
     };
+
 
     return (
         <motion.div
@@ -92,14 +98,19 @@ export default function StoryViewer({ stories, initialIndex, onClose }: StoryVie
             {/* Header */}
             <div className="absolute top-4 left-0 right-0 z-20 px-4 py-2 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <img
-                        src={currentStory.avatar}
-                        alt={currentStory.user}
-                        className="w-10 h-10 rounded-full border-2 border-white/20"
-                    />
+                    {/* Hashtag Icon / Avatar Placeholder */}
+                    <div className="w-10 h-10 rounded-full border-2 border-white/20 flex items-center justify-center bg-white/10 backdrop-blur-sm">
+                        <Hash className="w-5 h-5 text-white" />
+                    </div>
+
                     <div>
-                        <h4 className="text-white font-bold text-sm">{currentStory.user}</h4>
-                        <span className="text-white/60 text-xs">{currentStory.timestamp}</span>
+                        <h4 className="text-white font-bold text-sm tracking-wide">
+                            {channelTitle || currentStory.user}
+                        </h4>
+                        <div className="flex items-center gap-2">
+                            <span className="text-white/60 text-xs">{currentStory.timestamp}</span>
+                            {!channelTitle && <span className="text-white/40 text-[10px]">• Anonim</span>}
+                        </div>
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -154,20 +165,18 @@ export default function StoryViewer({ stories, initialIndex, onClose }: StoryVie
             </div>
 
             {/* Footer Input */}
-            <div className="relative z-20 p-4 pb-8 md:pb-4 flex items-center gap-4 bg-black">
-                <div className="flex-1 relative">
-                    <input
-                        type="text"
-                        placeholder={`Message ${currentStory.user}...`}
-                        className="w-full bg-white/10 border border-white/10 rounded-full px-6 py-3 text-white placeholder-white/50 focus:outline-none focus:border-white/30"
-                    />
-                </div>
-                <button className="p-3 hover:bg-white/10 rounded-full transition-colors">
-                    <Heart className="w-7 h-7 text-white" />
-                </button>
-                <button className="p-3 hover:bg-white/10 rounded-full transition-colors">
-                    <Send className="w-7 h-7 text-white" />
-                </button>
+            {/* Footer Interaction - Just Like */}
+            <div className="relative z-20 p-8 flex items-center justify-center">
+                <motion.button
+                    whileTap={{ scale: 0.8 }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        // Heart animation logic could go here
+                    }}
+                    className="w-16 h-16 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center group hover:bg-white/20 transition-all shadow-lg active:bg-red-500/20 active:border-red-500/50"
+                >
+                    <Heart className="w-8 h-8 text-white group-active:text-red-500 group-active:fill-red-500 transition-colors" />
+                </motion.button>
             </div>
         </motion.div>
     );
